@@ -5,7 +5,7 @@ import sys
 WIDTH, HEIGHT = 800, 600
 TILE_SIZE = 50
 FPS = 60
-MOVEMENT_DELAY = 10  # Increase this value to slow down the player
+MOVEMENT_DELAY = 100  # Increase this value to slow down the player
 
 # Colors
 WHITE = (255, 255, 255)
