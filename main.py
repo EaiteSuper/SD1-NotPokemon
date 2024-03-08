@@ -5,6 +5,7 @@ import sys
 WIDTH, HEIGHT = 800, 600
 TILE_SIZE = 50
 FPS = 60
+MOVEMENT_DELAY = 10  # Increase this value to slow down the player
 
 # Colors
 WHITE = (255, 255, 255)
@@ -30,9 +31,20 @@ map_data = [
     [0, 0, 0, 0, 0]
 ]
 
+# Player position
+player_pos = [0, 0]
+
+# Movement flags
+moving_up = False
+moving_down = False
+moving_left = False
+moving_right = False
+
+# Movement timer
+movement_timer = 0
+
 # Game loop
 running = True
-player_pos = [0, 0]  # Starting position of the player
 while running:
     screen.fill(WHITE)
 
@@ -40,18 +52,36 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if pygame.key.get_pressed() == pygame.K_UP:
-            if player_pos[1] > 0 and map_data[player_pos[1] - 1][player_pos[0]] == 0:
-                player_pos[1] -= 1
-        elif pygame.key.get_pressed() == pygame.K_DOWN:
-            if player_pos[1] < len(map_data) - 1 and map_data[player_pos[1] + 1][player_pos[0]] == 0:
-                player_pos[1] += 1
-        elif pygame.key.get_pressed() == pygame.K_LEFT:
-            if player_pos[0] > 0 and map_data[player_pos[1]][player_pos[0] - 1] == 0:
-                player_pos[0] -= 1
-        elif pygame.key.get_pressed() == pygame.K_RIGHT:
-            if player_pos[0] < len(map_data[0]) - 1 and map_data[player_pos[1]][player_pos[0] + 1] == 0:
-                player_pos[0] += 1
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                moving_up = True
+            elif event.key == pygame.K_DOWN:
+                moving_down = True
+            elif event.key == pygame.K_LEFT:
+                moving_left = True
+            elif event.key == pygame.K_RIGHT:
+                moving_right = True
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                moving_up = False
+            elif event.key == pygame.K_DOWN:
+                moving_down = False
+            elif event.key == pygame.K_LEFT:
+                moving_left = False
+            elif event.key == pygame.K_RIGHT:
+                moving_right = False
+
+    # Update player position
+    if pygame.time.get_ticks() - movement_timer > MOVEMENT_DELAY:
+        if moving_up and player_pos[1] > 0 and map_data[player_pos[1] - 1][player_pos[0]] == 0:
+            player_pos[1] -= 1
+        if moving_down and player_pos[1] < len(map_data) - 1 and map_data[player_pos[1] + 1][player_pos[0]] == 0:
+            player_pos[1] += 1
+        if moving_left and player_pos[0] > 0 and map_data[player_pos[1]][player_pos[0] - 1] == 0:
+            player_pos[0] -= 1
+        if moving_right and player_pos[0] < len(map_data[0]) - 1 and map_data[player_pos[1]][player_pos[0] + 1] == 0:
+            player_pos[0] += 1
+        movement_timer = pygame.time.get_ticks()
 
     # Draw map
     for y, row in enumerate(map_data):
