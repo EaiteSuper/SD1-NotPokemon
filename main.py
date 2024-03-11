@@ -1,6 +1,8 @@
 import pygame
 import sys
 
+from drawmap import *
+
 # Constants
 WIDTH, HEIGHT = 800, 600
 TILE_SIZE = 50
